@@ -8,19 +8,48 @@ void yyerror(char *s);
 %}
 
 // 定义句法终结符
-%token DIGIT LIANG LING SHI BAI QIAN WAN YI
+%token DIGIT ER LIANG LING SHI BAI QIAN WAN YI
 
 %%
+/*
+todo: 增加语法规则
+1. 处理“四百零七亿零一百二十万零三百零七”和“四百零七亿零一百二十”的歧义问题
+2. 处理“三百八”的解析问题
+*/
+
 
 Number:
-    TenThousandPos
+    DecBillionPos
     | LING
+    ;
+
+DecBillionPos:
+    DecBillionNum AfterTenThousandPos
+    | DecBillionNum LING AfterZeroTenThousandPos
+    | TenThousandPos
+    ;
+
+DecBillionNum:
+    TenThousandPos YI
+    | LIANG YI
     ;
 
 // 万位
 TenThousandPos:
-    TenThousandNum ThousandPos
+    TenThousandNum AfterThousandPos
+    | TenThousandNum LING HundredPos
     | ThousandPos
+    ;
+
+AfterTenThousandPos:
+    TenThousandNum AfterThousandPos
+    | TenThousandNum LING HundredPos
+    |
+    ;
+
+AfterZeroTenThousandPos:
+    ThousandPos
+    | HundredPos WAN AfterThousandPos
     ;
 
 // X万
@@ -31,48 +60,68 @@ TenThousandNum:
 
 // 千位数
 ThousandPos:
-    ThousandNum HundredPos
-    | HundredPos
+    HundredPos
+    | ThousandNum AfterHundredPos
+    | ThousandNum LING AfterZeroTenPos
     ;
 
-// X千
+AfterThousandPos:
+    ThousandNum AfterHundredPos
+    | ThousandNum LING AfterZeroTenPos
+    |
+    ;
+
 ThousandNum:
-    DIGIT QIAN
+    Digit QIAN
     | LIANG QIAN
     ;
 
-// 百位数
 HundredPos:
-    HundredNum TenLimitPos
-    | TenPos
+    TenPos
+    | HundredNum LING Digit
+    | HundredNum AfterTenPos
     ;
 
-// X百
+AfterHundredPos:
+    HundredNum AfterTenPos
+    | HundredNum LING Digit
+    |
+    ;
+
 HundredNum:
-    DIGIT BAI
+    Digit BAI
     | LIANG BAI
     ;
 
-// 十位数（包含十X）
 TenPos:
-    SHI Individual
-    | TenLimitPos
+    SHI DigitZero
+    | TenNum DigitZero
+    | Digit
     ;
 
-// 十位数
-TenLimitPos:
-    TenLimitNum Individual
-    | Individual
+AfterTenPos:
+    TenNum DigitZero
+    | DigitZero
     ;
 
-TenLimitNum:
-    DIGIT SHI
+AfterZeroTenPos:
+    TenNum DigitZero
+    | Digit
     ;
 
-// 个位数
-Individual:
+TenNum:
+    Digit SHI
+    ;
+
+Digit:
     DIGIT
-    |
+    | ER
+    ;
+
+DigitZero:
+    DIGIT
+    | ER
+    | 
     ;
 
 %%

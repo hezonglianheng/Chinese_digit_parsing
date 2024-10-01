@@ -4,7 +4,8 @@
 #include "digit.tab.h"
 %}
 
-Digit 一|二|三|四|五|六|七|八|九
+Digit 一|三|四|五|六|七|八|九
+Er 二
 Liang 两
 Ling 零
 Shi 十
@@ -15,6 +16,7 @@ Yi 亿
 
 %%
 {Digit}    { return DIGIT; }
+{Er}       { return ER; }
 {Liang}    { return LIANG; }
 {Ling}      { return LING; }
 {Shi}       { return SHI; }

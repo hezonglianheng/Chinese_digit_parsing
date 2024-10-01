@@ -25,6 +25,7 @@ int main() {
     std::string line;
     std::string tmp_file = "tmp.txt"; // 存储每行的内容的临时文件
     int line_number = 0;
+    int success = 0, fail = 0;
     while (std::getline(file, line)) {
         std::cout << "Now Parsing: " << ++line_number << std::endl;
 
@@ -33,11 +34,22 @@ int main() {
         tmp.close();
 
         yyin = fopen(tmp_file.c_str(), "r");
-        yyparse();
+        int parse_res = yyparse(); // 调用yyparse()函数进行解析, 返回值为0表示解析成功
+        if (parse_res == 0) {
+            std::cout << "Parse Success" << std::endl;
+            success++;
+        } 
+        else {
+            std::cout << "Parse Fail" << std::endl;
+            fail++;
+        }
         fclose(yyin);
     }
 
     remove(tmp_file.c_str());
     file.close();
+    std::cout << "Parse Result: " << std::endl;
+    std::cout << "Success: " << success << std::endl;
+    std::cout << "Fail: " << fail << std::endl;
     return 0;
 }

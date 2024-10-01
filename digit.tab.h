@@ -40,13 +40,14 @@
       know about them.  */
    enum yytokentype {
      DIGIT = 258,
-     LIANG = 259,
-     LING = 260,
-     SHI = 261,
-     BAI = 262,
-     QIAN = 263,
-     WAN = 264,
-     YI = 265
+     ER = 259,
+     LIANG = 260,
+     LING = 261,
+     SHI = 262,
+     BAI = 263,
+     QIAN = 264,
+     WAN = 265,
+     YI = 266
    };
 #endif
 
