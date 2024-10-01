@@ -12,7 +12,7 @@ void yyerror(char *s);
 
 %%
 /*
-todo: 增加语法规则
+done: 增加语法规则
 1. 处理“四百零七亿零一百二十万零三百零七”和“四百零七亿零一百二十”的歧义问题
 2. 处理“三百八”的解析问题
 */
@@ -20,18 +20,30 @@ todo: 增加语法规则
 
 Number:
     DecBillionPos
+    | Abbr
     | LING
     ;
 
 DecBillionPos:
     DecBillionNum AfterTenThousandPos
-    | DecBillionNum LING AfterZeroTenThousandPos
+    | DecBillionNum LING AfterZeroMillionPos
     | TenThousandPos
     ;
 
 DecBillionNum:
     TenThousandPos YI
     | LIANG YI
+    ;
+
+AfterZeroMillionPos:
+    MillionNum AfterThousandPos
+    | MillionNum LING HundredPos
+    | ThousandPos
+    ;
+
+MillionNum:
+    HundredPos WAN
+    | LIANG WAN
     ;
 
 // 万位
@@ -45,11 +57,6 @@ AfterTenThousandPos:
     TenThousandNum AfterThousandPos
     | TenThousandNum LING HundredPos
     |
-    ;
-
-AfterZeroTenThousandPos:
-    ThousandPos
-    | HundredPos WAN AfterThousandPos
     ;
 
 // X万
@@ -101,7 +108,7 @@ TenPos:
 
 AfterTenPos:
     TenNum DigitZero
-    | DigitZero
+    |
     ;
 
 AfterZeroTenPos:
@@ -122,6 +129,13 @@ DigitZero:
     DIGIT
     | ER
     | 
+    ;
+
+Abbr:
+    ThousandNum Digit
+    | HundredNum Digit
+    | TenThousandNum Digit
+    | DecBillionNum DIGIT
     ;
 
 %%
