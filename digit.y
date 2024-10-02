@@ -17,46 +17,58 @@ done: 增加语法规则
 2. 处理“三百八”的解析问题
 */
 
+/*
+done: 语法规则
+处理“万万”“万万亿”等问题
+*/
 
-Number:
-    DecBillionPos
-    | Abbr
-    | LING
+
+Number: // 数字
+    DecBillionPos // 从最高位“万万万……”开始解析
+    | Abbr // 数字的缩略形式单独解析
+    | LING // “零”做特殊处理
     ;
 
-DecBillionPos:
-    DecBillionNum AfterTenThousandPos
-    | DecBillionNum LING AfterZeroMillionPos
-    | TenThousandPos
+DecBillionPos: // 亿位
+    DecBillionNum AfterTenThousandPos // 亿位数后面跟着万位数
+    | DecBillionNum LING AfterZeroMillionPos // 亿位数后面跟着“零”和百万位数
+    | TenThousandPos // 亿位留空
     ;
 
-DecBillionNum:
-    TenThousandPos YI
-    | LIANG YI
+DecBillionNum: // 亿位数
+    TenThousandPos YI // 亿位数嵌套万位数
+    | LIANG YI // 两亿单独处理
+    | WanWanNum
+    | WanWanNum YI
     ;
 
-AfterZeroMillionPos:
-    MillionNum AfterThousandPos
-    | MillionNum LING HundredPos
-    | ThousandPos
+WanWanNum: // 万万位数
+    TenThousandNum WAN
+    | TenThousandNum TenThousandNum WAN
+    | TenThousandNum LING HundredPos WAN WAN
     ;
 
-MillionNum:
-    HundredPos WAN
-    | LIANG WAN
+AfterZeroMillionPos: // 亿位数后面跟着“零”和百万位数
+    MillionNum AfterThousandPos // X百万后面跟着千位数
+    | MillionNum LING HundredPos // X百万后面跟着“零”和百位数
+    | ThousandPos // X百万留空
     ;
 
-// 万位
-TenThousandPos:
-    TenThousandNum AfterThousandPos
-    | TenThousandNum LING HundredPos
-    | ThousandPos
+MillionNum: // 百万位数
+    HundredPos WAN // 百万位数嵌套百位数
+    | LIANG WAN // 两万单独处理
     ;
 
-AfterTenThousandPos:
-    TenThousandNum AfterThousandPos
-    | TenThousandNum LING HundredPos
-    |
+TenThousandPos: // 万位
+    TenThousandNum AfterThousandPos // 万位数后面跟着千位数
+    | TenThousandNum LING HundredPos // 万位数后面跟着“零”和百位数
+    | ThousandPos // 万位留空
+    ;
+
+AfterTenThousandPos: // 跟随的万位数
+    TenThousandNum AfterThousandPos // 万位数后面跟着千位数
+    | TenThousandNum LING HundredPos // 万位数后面跟着“零”和百位数
+    | // 留空
     ;
 
 // X万
@@ -132,10 +144,10 @@ DigitZero:
     ;
 
 Abbr:
-    ThousandNum Digit
-    | HundredNum Digit
-    | TenThousandNum Digit
-    | DecBillionNum DIGIT
+    ThousandNum Digit // “三千八”
+    | HundredNum Digit // “三百八”
+    | TenThousandNum Digit // “三万八”
+    | DecBillionNum DIGIT // “三亿八”
     ;
 
 %%

@@ -24,5 +24,6 @@ Yi 亿
 {Qian}      { return QIAN; }
 {Wan}       { return WAN; }
 {Yi}        { return YI; }
+[ \t\n\r]+  { /* Skip whitespace */ }
 .           { printf("Unknown character: %s\n", yytext); }
 %%
