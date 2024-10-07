@@ -12,16 +12,12 @@ void yyerror(char *s);
 
 %%
 /*
-done: 增加语法规则
+todo: 增加语法规则
 1. 处理“四百零七亿零一百二十万零三百零七”和“四百零七亿零一百二十”的歧义问题
 2. 处理“三百八”的解析问题
+3. 处理位数“万万”
+4. 处理“三十三万零两百八”
 */
-
-/*
-done: 语法规则
-处理“万万”“万万亿”等问题
-*/
-
 
 Number: // 数字
     DecBillionPos // 从最高位“万万万……”开始解析
@@ -32,6 +28,8 @@ Number: // 数字
 DecBillionPos: // 亿位
     DecBillionNum AfterTenThousandPos // 亿位数后面跟着万位数
     | DecBillionNum LING AfterZeroMillionPos // 亿位数后面跟着“零”和百万位数
+    | DecBillionNum LING HundredAbbr // 亿位数后面跟着“零”和百位数的缩略形式
+    | DecBillionNum LING ThousandAbbr // 亿位数后面跟着“零”和十位数
     | TenThousandPos // 亿位留空
     ;
 
@@ -56,18 +54,22 @@ AfterZeroMillionPos: // 亿位数后面跟着“零”和百万位数
 
 MillionNum: // 百万位数
     HundredPos WAN // 百万位数嵌套百位数
-    | LIANG WAN // 两万单独处理
+    // | LIANG WAN // 两万单独处理
     ;
 
 TenThousandPos: // 万位
     TenThousandNum AfterThousandPos // 万位数后面跟着千位数
     | TenThousandNum LING HundredPos // 万位数后面跟着“零”和百位数
     | ThousandPos // 万位留空
+    | TenThousandNum ThousandAbbr // 万位数后面跟着千位数的缩略形式
+    | TenThousandNum LING HundredAbbr // 万位数后面跟着“零”和千位数的缩略形式
     ;
 
 AfterTenThousandPos: // 跟随的万位数
     TenThousandNum AfterThousandPos // 万位数后面跟着千位数
     | TenThousandNum LING HundredPos // 万位数后面跟着“零”和百位数
+    | TenThousandNum ThousandAbbr // 万位数后面跟着千位数的缩略形式
+    | TenThousandNum LING HundredAbbr // 万位数后面跟着“零”和千位数的缩略形式
     | // 留空
     ;
 
@@ -144,10 +146,26 @@ DigitZero:
     ;
 
 Abbr:
+    HundredAbbr
+    | ThousandAbbr
+    | TenThousandAbbr
+    | DecBillionAbbr
+    ;
+
+HundredAbbr:
+    HundredNum Digit // “三百八”
+    ;
+
+ThousandAbbr:
     ThousandNum Digit // “三千八”
-    | HundredNum Digit // “三百八”
-    | TenThousandNum Digit // “三万八”
-    | DecBillionNum DIGIT // “三亿八”
+    ;
+
+TenThousandAbbr:
+    TenThousandNum Digit // “三万八”
+    ;
+
+DecBillionAbbr:
+    DecBillionNum Digit // “三亿八”
     ;
 
 %%
