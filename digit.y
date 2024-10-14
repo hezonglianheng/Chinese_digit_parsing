@@ -17,6 +17,7 @@ todo: 增加语法规则
 2. 处理“三百八”的解析问题
 3. 处理位数“万万”
 4. 处理“三十三万零两百八”
+5. 处理“两百万三”的非法性，并且解决文法上的冲突
 */
 
 Number: // 数字
@@ -41,9 +42,14 @@ DecBillionNum: // 亿位数
     ;
 
 WanWanNum: // 万万位数
-    TenThousandNum WAN
-    | TenThousandNum TenThousandNum WAN
-    | TenThousandNum LING HundredPos WAN WAN
+    Wan1 WAN
+    | Wan2 WAN
+    | Wan1 Wan1 WAN
+    | Wan1 Wan2 WAN
+    | Wan2 Wan1 WAN
+    | Wan2 Wan2 WAN
+    | Wan1 LING HundredPos WAN WAN
+    | Wan2 LING HundredPos WAN WAN
     ;
 
 AfterZeroMillionPos: // 亿位数后面跟着“零”和百万位数
@@ -58,25 +64,87 @@ MillionNum: // 百万位数
     ;
 
 TenThousandPos: // 万位
-    TenThousandNum AfterThousandPos // 万位数后面跟着千位数
-    | TenThousandNum LING HundredPos // 万位数后面跟着“零”和百位数
+    Wan1 AfterThousandPos // 万位数后面跟着千位数
+    | Wan2 AfterThousandPos // 万位数后面跟着“零”和千位数
+    | Wan1 LING HundredPos // 万位数后面跟着“零”和百位数
+    | Wan2 LING HundredPos // 万位数后面跟着“零”和百位数
+    | Wan1 ThousandAbbr // 万位数后面跟着千位数的缩略形式
+    | Wan2 LING HundredAbbr // 万位数后面跟着“零”和千位数的缩略形式
     | ThousandPos // 万位留空
-    | TenThousandNum ThousandAbbr // 万位数后面跟着千位数的缩略形式
-    | TenThousandNum LING HundredAbbr // 万位数后面跟着“零”和千位数的缩略形式
     ;
 
 AfterTenThousandPos: // 跟随的万位数
-    TenThousandNum AfterThousandPos // 万位数后面跟着千位数
-    | TenThousandNum LING HundredPos // 万位数后面跟着“零”和百位数
-    | TenThousandNum ThousandAbbr // 万位数后面跟着千位数的缩略形式
-    | TenThousandNum LING HundredAbbr // 万位数后面跟着“零”和千位数的缩略形式
+    Wan1 AfterThousandPos // 万位数后面跟着千位数
+    | Wan2 AfterThousandPos // 万位数后面跟着“零”和千位数
+    | Wan1 LING HundredPos // 万位数后面跟着“零”和百位数
+    | Wan2 LING HundredPos // 万位数后面跟着“零”和百位数
+    | Wan1 ThousandAbbr // 万位数后面跟着千位数的缩略形式
+    | Wan2 LING HundredAbbr // 万位数后面跟着“零”和千位数的缩略形式
     | // 留空
     ;
 
 // X万
-TenThousandNum:
-    ThousandPos WAN
-    | LIANG WAN
+// 10-14修订: 拆解为更细的规则
+Wan1:
+    GeWan
+    | LiangWan
+    | ShiGeWan
+    | JiShiGeWan
+    | BaiGeWan
+    | QianGeWan
+    ;
+
+Wan2:
+    ShiLingWan
+    | JiShiLingWan
+    | BaiLingWan
+    | QianLingWan
+    ;
+
+GeWan:
+    Digit WAN
+    ;
+
+LiangWan:
+    LIANG WAN
+    ;
+
+ShiGeWan:
+    SHI GeWan
+    ;
+
+JiShiGeWan:
+    TenNum GeWan
+    ;
+
+ShiLingWan:
+    SHI WAN
+    ;
+
+JiShiLingWan:
+    TenNum WAN
+    ;
+
+BaiGeWan:
+    HundredNum LING GeWan
+    | HundredNum JiShiGeWan
+    ;
+
+BaiLingWan:
+    HundredNum WAN
+    | HundredNum JiShiLingWan
+    ;
+
+QianGeWan:
+    ThousandNum LING GeWan
+    | ThousandNum LING JiShiGeWan
+    | ThousandNum BaiGeWan
+    ;
+
+QianLingWan:
+    ThousandNum WAN
+    | ThousandNum LING JiShiLingWan
+    | ThousandNum BaiLingWan
     ;
 
 // 千位数
@@ -149,7 +217,6 @@ Abbr:
     HundredAbbr
     | ThousandAbbr
     | TenThousandAbbr
-    | DecBillionAbbr
     ;
 
 HundredAbbr:
@@ -161,11 +228,7 @@ ThousandAbbr:
     ;
 
 TenThousandAbbr:
-    TenThousandNum Digit // “三万八”
-    ;
-
-DecBillionAbbr:
-    DecBillionNum Digit // “三亿八”
+    Wan1 Digit // “三万八”
     ;
 
 %%
