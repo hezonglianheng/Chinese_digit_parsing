@@ -46,9 +46,9 @@ int main() {
             failed_lines.push_back(line_number);
         }
         fclose(yyin);
+        remove(tmp_file.c_str());
     }
 
-    remove(tmp_file.c_str());
     file.close();
     std::cout << "Parse Result: " << std::endl;
     std::cout << "Success: " << success_lines.size() << std::endl;
