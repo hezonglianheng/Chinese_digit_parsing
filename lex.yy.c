@@ -391,7 +391,8 @@ char *yytext;
 #include <stdio.h>
 #include <stdlib.h>
 #include "digit.tab.h"
-#line 395 "lex.yy.c"
+/* 由汉字产生token类别的规则。左侧为token类别，右侧为汉字 */
+#line 396 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -542,9 +543,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 17 "digit.l"
+#line 18 "digit.l"
 
-#line 548 "lex.yy.c"
+    /* 由token类别产生文法终结符的规则 */
+#line 550 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -629,65 +631,65 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 18 "digit.l"
+#line 20 "digit.l"
 { return DIGIT; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 19 "digit.l"
+#line 21 "digit.l"
 { return ER; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 20 "digit.l"
+#line 22 "digit.l"
 { return LIANG; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 21 "digit.l"
+#line 23 "digit.l"
 { return LING; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 22 "digit.l"
+#line 24 "digit.l"
 { return SHI; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 23 "digit.l"
+#line 25 "digit.l"
 { return BAI; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 24 "digit.l"
+#line 26 "digit.l"
 { return QIAN; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 25 "digit.l"
+#line 27 "digit.l"
 { return WAN; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 26 "digit.l"
+#line 28 "digit.l"
 { return YI; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 27 "digit.l"
+#line 29 "digit.l"
 { /* Skip whitespace */ }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 28 "digit.l"
+#line 30 "digit.l"
 { printf("Unknown character: %s\n", yytext); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 29 "digit.l"
+#line 31 "digit.l"
 ECHO;
 	YY_BREAK
-#line 691 "lex.yy.c"
+#line 693 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1573,5 +1575,5 @@ int main()
 	return 0;
 	}
 #endif
-#line 29 "digit.l"
+#line 31 "digit.l"
 
