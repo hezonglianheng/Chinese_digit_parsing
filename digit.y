@@ -38,7 +38,8 @@ DecBillionNum: // 亿位数
     TenThousandPos YI // 亿位数嵌套万位数
     | LIANG YI // 两亿单独处理
     | WanWanNum
-    | WanWanNum YI
+    // | WanWanNum YI
+    | DecBillionNum YI
     ;
 
 WanWanNum: // 万万位数
