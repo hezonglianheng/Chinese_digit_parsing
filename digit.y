@@ -50,7 +50,7 @@ WanWanNum: // 万万位数
     | Wan2 Wan1 WAN
     | Wan2 Wan2 WAN
     | Wan1 LING HundredPos WAN WAN
-    | Wan2 LING HundredPos WAN WAN
+    | Wan2 LING ThousandPos WAN WAN
     ;
 
 AfterZeroMillionPos: // 亿位数后面跟着“零”和百万位数
@@ -67,9 +67,12 @@ MillionNum: // 百万位数
 TenThousandPos: // 万位
     Wan1 AfterThousandPos // 万位数后面跟着千位数
     | Wan2 AfterThousandPos // 万位数后面跟着“零”和千位数
+    | Wan2 LING ThousandPos // 万位数后面跟着“零”和千位数
     | Wan1 LING HundredPos // 万位数后面跟着“零”和百位数
-    | Wan2 LING HundredPos // 万位数后面跟着“零”和百位数
+    // | Wan2 LING HundredPos // 万位数后面跟着“零”和百位数
     | Wan1 ThousandAbbr // 万位数后面跟着千位数的缩略形式
+    | Wan2 LING ThousandAbbr // 万位数后面跟着“零”和千位数的缩略形式
+    | Wan1 LING HundredAbbr // 万位数后面跟着“零”和千位数的缩略形式
     | Wan2 LING HundredAbbr // 万位数后面跟着“零”和千位数的缩略形式
     | ThousandPos // 万位留空
     ;
@@ -77,9 +80,12 @@ TenThousandPos: // 万位
 AfterTenThousandPos: // 跟随的万位数
     Wan1 AfterThousandPos // 万位数后面跟着千位数
     | Wan2 AfterThousandPos // 万位数后面跟着“零”和千位数
+    | Wan2 LING ThousandPos // 万位数后面跟着“零”和千位数
     | Wan1 LING HundredPos // 万位数后面跟着“零”和百位数
-    | Wan2 LING HundredPos // 万位数后面跟着“零”和百位数
+    // | Wan2 LING HundredPos // 万位数后面跟着“零”和百位数
     | Wan1 ThousandAbbr // 万位数后面跟着千位数的缩略形式
+    | Wan2 LING ThousandAbbr // 万位数后面跟着“零”和千位数的缩略形式
+    | Wan1 LING HundredAbbr // 万位数后面跟着“零”和千位数的缩略形式
     | Wan2 LING HundredAbbr // 万位数后面跟着“零”和千位数的缩略形式
     | // 留空
     ;
@@ -153,11 +159,13 @@ ThousandPos:
     HundredPos
     | ThousandNum AfterHundredPos
     | ThousandNum LING AfterZeroTenPos
+    | ThousandNum HundredAbbr
     ;
 
 AfterThousandPos:
     ThousandNum AfterHundredPos
     | ThousandNum LING AfterZeroTenPos
+    | ThousandNum HundredAbbr
     |
     ;
 
