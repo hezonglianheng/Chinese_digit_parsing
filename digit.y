@@ -67,7 +67,7 @@ MillionNum: // 百万位数
 
 TenThousandPos: // 万位
     Wan1 AfterThousandPos // 万位数后面跟着千位数
-    | Wan2 AfterThousandPos // 万位数后面跟着“零”和千位数
+    | Wan2 // 万位数后面跟着“零”和千位数
     | Wan2 LING ThousandPos // 万位数后面跟着“零”和千位数
     | Wan1 LING HundredPos // 万位数后面跟着“零”和百位数
     // | Wan2 LING HundredPos // 万位数后面跟着“零”和百位数
@@ -80,7 +80,7 @@ TenThousandPos: // 万位
 
 AfterTenThousandPos: // 跟随的万位数
     Wan1 AfterThousandPos // 万位数后面跟着千位数
-    | Wan2 AfterThousandPos // 万位数后面跟着“零”和千位数
+    | Wan2 // 万位数后面跟着“零”和千位数
     | Wan2 LING ThousandPos // 万位数后面跟着“零”和千位数
     | Wan1 LING HundredPos // 万位数后面跟着“零”和百位数
     // | Wan2 LING HundredPos // 万位数后面跟着“零”和百位数
