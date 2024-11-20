@@ -51,6 +51,7 @@ WanWanNum: // 万万位数
     | Wan2 Wan2 WAN
     | Wan1 LING HundredPos WAN WAN
     | Wan2 LING ThousandPos WAN WAN
+    | WanWanNum WAN
     ;
 
 AfterZeroMillionPos: // 亿位数后面跟着“零”和百万位数
