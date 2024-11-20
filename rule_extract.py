@@ -12,12 +12,18 @@ def extract_rules_from_l_file(l_file_path):
     rule_pattern = re.compile(r'(?<=\n)[a-zA-Z_][a-zA-Z0-9_]*\s.*')
 
     rules = rule_pattern.findall(content)
+    # 去除注释
+    rules = [re.sub(r'//.*', '', rule) for rule in rules]
+    rules = [re.sub(r'/\*.*?\*/', '', rule, flags=re.DOTALL) for rule in rules]
+    # 去除空格
+    rules = [re.sub(r'\s+', ' ', rule) for rule in rules]
     readable_rules = []
     for rule in rules:
         left, rights = rule.split(' ', 1)
         right_list = rights.split('|')
         right_list = [right.strip() for right in right_list]
         for right in right_list:
+            right = right if len(right) > 0 else 'ε' # 空字符串表示ε
             readable_rules.append(left + ' -> ' + right + ";")
 
     return readable_rules
@@ -32,6 +38,7 @@ def extract_rules_from_y_file(y_file_path):
     rules = rule_pattern.findall(content)
     # 去除注释
     rules = [re.sub(r'//.*', '', rule) for rule in rules]
+    rules = [re.sub(r'/\*.*?\*/', '', rule, flags=re.DOTALL) for rule in rules]
     # 去除空格
     rules = [re.sub(r'\s+', ' ', rule) for rule in rules]
     # 将规则转换为用->表示的形式
@@ -42,6 +49,7 @@ def extract_rules_from_y_file(y_file_path):
         right_list = rights.split('|') # 分割右部的多个可能
         right_list = [right.strip() for right in right_list] # 去除空格
         for right in right_list: # 生成可读的规则
+            right = right if len(right) > 0 else 'ε' # 空字符串表示ε
             readable_rules.append(left + ' -> ' + right + ";")
 
     return readable_rules
